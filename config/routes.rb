@@ -9,4 +9,6 @@ GogogibbonTools::Engine.routes.draw do
     end
   end
 
+  root to: 'mailchimp_subscribers#index'
+
 end

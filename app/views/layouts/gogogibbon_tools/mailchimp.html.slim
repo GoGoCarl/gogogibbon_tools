@@ -1,0 +1,21 @@
+html
+  head
+    title GoGoGibbon Tools
+    = stylesheet_link_tag    "gogogibbon_tools/application", :media => "all"
+    = javascript_include_tag "gogogibbon_tools/application"
+    = csrf_meta_tags
+
+  body style='padding-top: 60px'
+    nav.navbar.navbar-inverse.navbar-fixed-top
+      .container
+        .navbar-header
+          .navbar-brand GoGoGibbon Tools
+        #navbar.navbar-collapse.collapse
+          ul.nav.navbar-nav
+            li = link_to 'Main', mailchimp_subscribers_path
+            li = link_to 'Add Subscribers', new_mailchimp_subscriber_path
+          ul.nav.navbar-nav.navbar-right
+            li = link_to "Back to #{Rails.application.class.to_s.split("::").first}", '/'
+    .container
+      = yield
+

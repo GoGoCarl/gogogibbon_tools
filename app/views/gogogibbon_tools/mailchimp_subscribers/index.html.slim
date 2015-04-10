@@ -1,0 +1,76 @@
+h2 User Subscriptions
+
+- if @subscriptions['total'] <= 0
+  | No users are subscribed to this list.
+- else
+  p &nbsp;
+  p
+    ' Total Subscribers:
+    = @subscriptions['total']
+  div Quick Links
+  ul
+    li = link_to 'Active Users Subscribed', '#subscribed'
+    li = link_to 'Active Users Not Subscribed', '#notsubscribed'
+    li = link_to 'Non-Osprey Users Subscribed', '#missing'
+  h3#subscribed Active Users Subscribed
+  = render 'listing_section', :users => @subscribed, :section => 'subscribed', :action => 'unsubscribe'
+  = link_to '[top]', '#top'
+  hr
+  br
+  h3#notsubscribed Active Users Not Subscribed
+  = render 'listing_section', :users => @missing, :section => 'missing', :action => 'subscribe'
+  = link_to '[top]', '#top'
+  hr
+  br
+  h3#missing Non-Osprey Subscribed Users
+  = render 'listing_section', :users => @others, :section => 'others', :action => 'unsubscribe'
+  = link_to '[top]', '#top'
+  br
+
+javascript:
+  function show_all(section) {
+    toggle_indicator(section, null);
+
+    jQuery("#" + section + ' .row').each(function() {
+      row = jQuery(this);
+      row.attr("data-showing", "true");
+      row.show();
+    });
+  }
+
+  function show_page(section, page) {
+    jQuery("#" + section + ' .row[data-showing="true"]').each(function() {
+      row = jQuery(this);
+      row.attr("data-showing", "false");
+      row.hide();
+    });
+
+    jQuery("#" + section + ' .row[data-page="'+page+'"]').each(function() {
+      row = jQuery(this);
+      row.attr("data-showing", "true");
+      row.show();
+    });
+
+    toggle_indicator(section, page);
+  }
+
+  function toggle_indicator(section, page) {
+    jQuery("#" + section + " .seasontoggle").removeClass('seasontoggle_active');
+    jQuery("#" + section + ' .seasontoggle[data-page="'+page+'"]').addClass('seasontoggle_active');
+  }
+
+  jQuery(document).ready(function($) {
+    jQuery(".seasontoggle").click(function() {
+      page = jQuery(this).data("page");
+      sect = jQuery(this).data("section");
+      show_page(sect, page);
+    });
+    jQuery(".toggleall").click(function() {
+      sect = jQuery(this).data("section");
+      show_all(sect);
+    });
+    show_page('subscribed', 1);
+    show_page('missing', 1);
+    show_page('others', 1);
+  });
+

@@ -1,0 +1,44 @@
+h1 Request
+
+table
+  thead
+    tr
+      th Email
+      th First Name
+      th Last Name
+  tbody
+    - @users.each do |user|
+      tr
+        td = user.email
+        td = user.first_name
+        td = user.last_name
+
+- if @results.nil?
+  h1 Submit
+  = form_tag batch_mailchimp_subscribers_path do
+    = hidden_field_tag :confirmed, 'true'
+    = hidden_field_tag :csv, @csv
+    = submit_tag 'Submit'
+- else
+  h1 Response
+  ul
+    li = "Add Count: #{@results['add_count']}"
+    li = "Update Count: #{@results['update_count']}"
+    li = "Error Count: #{@results['error_count']}"
+  - if @results['errors'].any?
+    table
+      thead
+        tr
+          th Email
+          th Error Code
+          th Message
+      tbody
+        - @results['errors'].each do |error|
+          tr
+            td = error['email']
+            td = error['code']
+            td == error['message']
+
+hr
+
+= link_to 'Go Back',  mailchimp_subscribers_path

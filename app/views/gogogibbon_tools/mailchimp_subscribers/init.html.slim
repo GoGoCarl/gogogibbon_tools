@@ -1,0 +1,24 @@
+h2 Batch Import Results
+- if @error
+  p= @error
+- else
+  p
+    ' Add Count:
+    = @result['add_count']
+  p
+    ' Update Count:
+    = @result['update_count']
+  p 
+    ' Errors:
+    = @result['error_count']
+  - if @result['errors'] and @result['errors'].any?
+    ul
+      - @result['errors'].each do |error|
+        li
+          = "Error Code #{error['code']}: "
+          == error['message']
+          = " (for e-mail address #{error['email']})"
+
+hr
+
+= link_to 'Go Back', mailchimp_subscribers_path

@@ -1,0 +1,54 @@
+- section  = local_assigns[:section]
+- users    = local_assigns[:users]
+- action   = local_assigns[:action]
+
+- per_page = 25
+- cur_page = 1
+- cur_idx  = 0
+
+- # users.sort! { |x,y| x.email <=> y.email }
+
+.mailchimp_listing_section id=(section)
+  table.table style="margin:0px;"
+    thead
+      tr
+        th User Name
+        th Action
+
+  div style="max-height:400px;overflow-y:auto;"
+    table.table style="margin:0px;"
+      tbody
+        - users.each do |user|
+          tr.row data-page=(cur_page) data-index=(cur_idx) data-showing='false' style="display:none"
+            td 
+              - if 'subscribe' == action
+                = user.email
+              - elsif 'unsubscribe' == action
+                = link_to user.email, details_mailchimp_subscribers_path(email: user.email)
+            td align='right'
+              - if 'subscribe' == action
+                = form_for to_mailchimp_subscriber(user) do |f|
+                  = f.hidden_field :email
+                  = f.hidden_field :first_name
+                  = f.hidden_field :last_name
+                  .actions
+                    = f.submit 'Subscribe'
+              - elsif 'unsubscribe' == action
+                = form_for to_mailchimp_subscriber(user), :url => unsubscribe_mailchimp_subscribers_path do |f|
+                  = f.hidden_field :email
+                  .actions
+                    = f.submit 'Unsubscribe'
+          - cur_page = ((cur_idx + 1) % per_page == 0) ? (cur_page + 1) : cur_page
+          - cur_idx  = ((cur_idx + 1) % per_page == 0) ? 0 : (cur_idx + 1)
+  - if users.count > per_page
+    p style='line-height: 25px; clear:both'
+      a.toggleall data-section=(section) data-pages=(cur_page) href="javascript:void(0);"
+        = "View All #{users.count} Users"
+      '  |
+      | Page: 
+      - (1..cur_page).each do |page|
+        '
+        a.seasontoggle data-page=(page) data-section=(section) id=("page_#{page}") href="javascript:void(0);" = page
+  - else
+    p style='line-height: 25px; clear:both'
+      = pluralize users.count, 'total user'

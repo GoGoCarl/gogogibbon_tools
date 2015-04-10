@@ -1,6 +1,38 @@
-- if @result.nil? || !@result['errors'].nil?
-  p = "No user found for #{params[:id]}"
-- elsif @result['data'].first.empty?
+h3 Member Details
+
+- if @details.nil? || @details['success'] != 1
+  p = "No user found for #{params[:email]}"
+- else
+  - data = @details['data'].first
+
+  table.table
+    tr
+      td Email
+      td = data['email']
+    tr
+      td First Name
+      td = data['merges']['FNAME']
+    tr
+      td Last Name
+      td = data['merges']['LNAME']
+    tr
+      td Mailchimp ID
+      td = data['id']
+    tr
+      td Status
+      td = data['status']
+    tr
+      td Email Type
+      td = data['email_type']
+    tr
+      td Last Edit Date
+      td = data['info_changed']
+
+h3 Member Activity
+
+- if @activity.nil? || !@activity['errors'].nil?
+  p = "No user found for #{params[:email]}"
+- elsif @activity['data'].first.empty?
   p No activity for this user
 - else
   table.table
@@ -12,7 +44,7 @@
         th URL
         th Campaign
     tbody
-      - @result['data'].first.each do |item|
+      - @activity['data'].first.each do |item|
         - if item.any?
           tr
             td = item['action']

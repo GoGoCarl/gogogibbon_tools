@@ -109,7 +109,8 @@ module GogogibbonTools
       list_id = GoGoGibbon::Commands.list GoGoGibbon::Config.subscribed
       email   = params[:email]
 
-      @result = GoGoGibbon::Commands.chimp.list_member_activity :api_key => key, :id => list_id, :email_address => [email]
+      @details  = GoGoGibbon::Commands.chimp.list_member_info :api_key => key, :id => list_id, :email_address => [email]
+      @activity = GoGoGibbon::Commands.chimp.list_member_activity :api_key => key, :id => list_id, :email_address => [email]
     end
 
     private

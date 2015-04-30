@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", "~> 3.2.13.rc1"
   s.add_dependency "gogogibbon", "~> 1.1.1"
   s.add_dependency "bootstrap-sass", '3.1.1.0'
-  s.add_dependency "sass-rails", '> 3.2'
+  s.add_dependency "sass-rails", '> 3.2', '< 5'
   # s.add_dependency "jquery-rails"
 
 end

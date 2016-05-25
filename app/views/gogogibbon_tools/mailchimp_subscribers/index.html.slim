@@ -1,12 +1,12 @@
 h2 User Subscriptions
 
-- if @subscriptions['total'] <= 0
+- if @subscriptions['total_items'] <= 0
   | No users are subscribed to this list.
 - else
   p &nbsp;
   p
     ' Total Subscribers:
-    = @subscriptions['total']
+    = @subscriptions['total_items']
   div Quick Links
   ul
     li = link_to 'Active Users Subscribed', '#subscribed'

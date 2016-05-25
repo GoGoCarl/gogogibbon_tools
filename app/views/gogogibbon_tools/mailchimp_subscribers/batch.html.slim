@@ -1,6 +1,6 @@
 h1 Request
 
-table
+table.table
   thead
     tr
       th Email
@@ -14,11 +14,10 @@ table
         td = user.last_name
 
 - if @results.nil?
-  h1 Submit
   = form_tag batch_mailchimp_subscribers_path do
     = hidden_field_tag :confirmed, 'true'
     = hidden_field_tag :csv, @csv
-    = submit_tag 'Submit'
+    = submit_tag 'Submit', class: 'btn btn-lg btn-primary'
 - else
   h1 Response
   ul

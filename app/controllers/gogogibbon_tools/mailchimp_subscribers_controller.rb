@@ -19,14 +19,13 @@ module GogogibbonTools
 
     # List all users/subscribers
     def index
-      key      = GoGoGibbon::Config.api_key
       list_id  = GoGoGibbon::Commands.list GoGoGibbon::Config.subscribed
       status   = params[:status] || 'subscribed'
       sub_hash = {}
 
-      @subscriptions = GoGoGibbon::Commands.chimp.list_members :api_key => key, :id => list_id, :status => status, :limit => 15000
-      @subscriptions['data'].each do |item|
-        sub_hash[item['email']] = true
+      @subscriptions = GoGoGibbon::Commands.chimp.lists(list_id).members.retrieve(params: { "status" => status, "count" => 15000, "fields" => 'total_items,members.email_address' })
+      @subscriptions['members'].each do |item|
+        sub_hash[item['email_address']] = true
       end
 
       @subscribed = []
@@ -67,7 +66,7 @@ module GogogibbonTools
       @subscriber = MailchimpSubscriber.new params[:mailchimp_subscriber]
 
       if @subscriber.valid?
-        GoGoGibbon::Commands.unsubscribe @subscriber
+        GoGoGibbon::Commands.unsubscribe @subscriber, GoGoGibbon::Config.subscribed
       end
 
       respond_to do |format|
@@ -105,12 +104,14 @@ module GogogibbonTools
     end
 
     def details
-      key     = GoGoGibbon::Config.api_key
+      md5     = Digest::MD5.new
       list_id = GoGoGibbon::Commands.list GoGoGibbon::Config.subscribed
       email   = params[:email]
 
-      @details  = GoGoGibbon::Commands.chimp.list_member_info :api_key => key, :id => list_id, :email_address => [email]
-      @activity = GoGoGibbon::Commands.chimp.list_member_activity :api_key => key, :id => list_id, :email_address => [email]
+      md5.update email.downcase
+
+      @details  = GoGoGibbon::Commands.chimp.lists(list_id).members(md5.hexdigest).retrieve
+      @activity = GoGoGibbon::Commands.chimp.lists(list_id).members(md5.hexdigest).activity.retrieve
     end
 
     private
